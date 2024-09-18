@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Calculadora de Parcelamento</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        label, input {
+            display: block;
+            margin: 5px 0;
+        }
+        button {
+            margin-top: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        h1, h2, h3 {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Calculadora de Parcelamento</h1>
+    <form id="calcForm">
+        <label for="clientName">Nome do Cliente:</label>
+        <input type="text" id="clientName" required>
+        
+        <label for="productName">Nome do Produto:</label>
+        <input type="text" id="productName" required>
+        
+        <label for="totalValue">Valor Total (R$):</label>
+        <input type="text" id="totalValue" required>
+
+        <button type="submit">Calcular Parcelas</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+        // Função para formatar o número como moeda
+        function formatCurrency(value) {
+            return value.toLocaleString('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            });
+        }
+
+        // Evento para formatar o valor enquanto digita
+        document.getElementById('totalValue').addEventListener('input', function(e) {
+            let value = e.target.value;
+            value = value.replace(/\D/g, ''); // Remove tudo que não é número
+
+            // Formata como moeda brasileira
+            if (value) {
+                value = (parseInt(value) / 100).toFixed(2);
+                e.target.value = formatCurrency(Number(value));
+            } else {
+                e.target.value = ''; // Limpa o campo se estiver vazio
+            }
+        });
+
+        // Função para desformatar o valor antes de realizar os cálculos
+        function parseCurrency(value) {
+            return Number(value.replace(/[^0-9,-]+/g, '').replace(',', '.'));
+        }
+
+        document.getElementById('calcForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const clientName = document.getElementById('clientName').value;
+            const productName = document.getElementById('productName').value;
+            const totalValue = parseCurrency(document.getElementById('totalValue').value);
+
+            let resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '';
+
+            let table = document.createElement('table');
+
+            let headerRow = document.createElement('tr');
+            let headers = ['Opção de Pagamento', 'Valor da Parcela (R$)', 'Observações'];
+            headers.forEach(headerText => {
+                let th = document.createElement('th');
+                th.innerText = headerText;
+                headerRow.appendChild(th);
+            });
+            table.appendChild(headerRow);
+
+            // Opções de pagamento
+            let options = [
+                {
+                    name: 'À vista com 5% de desconto',
+                    amount: (totalValue * 0.95).toFixed(2),
+                    observations: ''
+                },
+                {
+                    name: '2x (PIX)',
+                    amount: (totalValue / 2).toFixed(2),
+                    observations: '50% na entrada, 50% na entrega'
+                },
+                {
+                    name: '2x no cartão de crédito',
+                    amount: (totalValue / 2).toFixed(2),
+                    observations: 'Sem juros'
+                },
+                {
+                    name: '3x no cartão de crédito',
+                    amount: ((totalValue * 1.07) / 3).toFixed(2),
+                    observations: `Total a pagar: ${formatCurrency(totalValue * 1.07)}`
+                },
+                {
+                    name: '4x no cartão de crédito',
+                    amount: ((totalValue * 1.09) / 4).toFixed(2),
+                    observations: `Total a pagar: ${formatCurrency(totalValue * 1.09)}`
+                },
+                {
+                    name: '5x no cartão de crédito',
+                    amount: ((totalValue * 1.10) / 5).toFixed(2),
+                    observations: `Total a pagar: ${formatCurrency(totalValue * 1.10)}`
+                },
+                {
+                    name: '6x no cartão de crédito',
+                    amount: ((totalValue * 1.12) / 6).toFixed(2),
+                    observations: `Total a pagar: ${formatCurrency(totalValue * 1.12)}`
+                },
+                {
+                    name: '7x no cartão de crédito',
+                    amount: ((totalValue * 1.135) / 7).toFixed(2),
+                    observations: `Total a pagar: ${formatCurrency(totalValue * 1.135)}`
+                },
+                {
+                    name: '8x no cartão de crédito',
+                    amount: ((totalValue * 1.145) / 8).toFixed(2),
+                    observations: `Total a pagar: ${formatCurrency(totalValue * 1.145)}`
+                },
+                {
+                    name: '9x no cartão de crédito',
+                    amount: ((totalValue * 1.1573) / 9).toFixed(2),
+                    observations: `Total a pagar: ${formatCurrency(totalValue * 1.1573)}`
+                },
+                {
+                    name: '10x no cartão de crédito',
+                    amount: ((totalValue * 1.17) / 10).toFixed(2),
+                    observations: `Total a pagar: ${formatCurrency(totalValue * 1.17)}`
+                },
+                {
+                    name: '11x no cartão de crédito',
+                    amount: ((totalValue * 1.18) / 11).toFixed(2),
+                    observations: `Total a pagar: ${formatCurrency(totalValue * 1.18)}`
+                },
+                {
+                    name: '12x no cartão de crédito',
+                    amount: ((totalValue * 1.2237) / 12).toFixed(2),
+                    observations: `Total a pagar: ${formatCurrency(totalValue * 1.2237)}`
+                }
+            ];
+
+            options.forEach(option => {
+                let row = document.createElement('tr');
+
+                let nameCell = document.createElement('td');
+                nameCell.innerText = option.name;
+                row.appendChild(nameCell);
+
+                let amountCell = document.createElement('td');
+                amountCell.innerText = formatCurrency(Number(option.amount));
+                row.appendChild(amountCell);
+
+                let obsCell = document.createElement('td');
+                obsCell.innerText = option.observations;
+                row.appendChild(obsCell);
+
+                table.appendChild(row);
+            });
+
+            // Exibir nome do cliente e produto
+            let infoDiv = document.createElement('div');
+            infoDiv.innerHTML = `<h2>Cliente: ${clientName}</h2><h3>Produto: ${productName}</h3>`;
+
+            resultDiv.appendChild(infoDiv);
+            resultDiv.appendChild(table);
+        });
+    </script>
+</body>
+</html>
