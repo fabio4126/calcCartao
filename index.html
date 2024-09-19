@@ -2,6 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora de Parcelamento</title>
     <style>
         body {
@@ -23,12 +24,36 @@
         th, td {
             border: 1px solid #ddd;
             padding: 8px;
+            text-align: left;
         }
         th {
             background-color: #f2f2f2;
         }
         h1, h2, h3 {
             margin-bottom: 10px;
+        }
+
+        /* Tornando a tabela responsiva */
+        @media screen and (max-width: 600px) {
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+            tr {
+                margin-bottom: 15px;
+            }
+            th, td {
+                text-align: right;
+                padding-left: 50%;
+                position: relative;
+            }
+            th::before, td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 10px;
+                width: calc(50% - 20px);
+                white-space: nowrap;
+                text-align: left;
+            }
         }
     </style>
 </head>
@@ -90,7 +115,7 @@
             let table = document.createElement('table');
 
             let headerRow = document.createElement('tr');
-            let headers = ['Opção de Pagamento', 'Valor da Parcela (R$)', 'Observações'];
+            let headers = ['Opção de Pagamento', 'Valor da Parcela (R$)'];
             headers.forEach(headerText => {
                 let th = document.createElement('th');
                 th.innerText = headerText;
@@ -102,68 +127,55 @@
             let options = [
                 {
                     name: 'À vista com 5% de desconto',
-                    amount: (totalValue * 0.95).toFixed(2),
-                    observations: ''
+                    amount: (totalValue * 0.95).toFixed(2)
                 },
                 {
                     name: '2x (PIX)',
-                    amount: (totalValue / 2).toFixed(2),
-                    observations: '50% na entrada, 50% na entrega'
+                    amount: (totalValue / 2).toFixed(2)
                 },
                 {
                     name: '2x no cartão de crédito',
-                    amount: (totalValue / 2).toFixed(2),
-                    observations: 'Sem juros'
+                    amount: (totalValue / 2).toFixed(2)
                 },
                 {
                     name: '3x no cartão de crédito',
-                    amount: ((totalValue * 1.07) / 3).toFixed(2),
-                    observations: `Total a pagar: ${formatCurrency(totalValue * 1.07)}`
+                    amount: ((totalValue * 1.07) / 3).toFixed(2)
                 },
                 {
                     name: '4x no cartão de crédito',
-                    amount: ((totalValue * 1.09) / 4).toFixed(2),
-                    observations: `Total a pagar: ${formatCurrency(totalValue * 1.09)}`
+                    amount: ((totalValue * 1.09) / 4).toFixed(2)
                 },
                 {
                     name: '5x no cartão de crédito',
-                    amount: ((totalValue * 1.10) / 5).toFixed(2),
-                    observations: `Total a pagar: ${formatCurrency(totalValue * 1.10)}`
+                    amount: ((totalValue * 1.10) / 5).toFixed(2)
                 },
                 {
                     name: '6x no cartão de crédito',
-                    amount: ((totalValue * 1.12) / 6).toFixed(2),
-                    observations: `Total a pagar: ${formatCurrency(totalValue * 1.12)}`
+                    amount: ((totalValue * 1.12) / 6).toFixed(2)
                 },
                 {
                     name: '7x no cartão de crédito',
-                    amount: ((totalValue * 1.135) / 7).toFixed(2),
-                    observations: `Total a pagar: ${formatCurrency(totalValue * 1.135)}`
+                    amount: ((totalValue * 1.135) / 7).toFixed(2)
                 },
                 {
                     name: '8x no cartão de crédito',
-                    amount: ((totalValue * 1.145) / 8).toFixed(2),
-                    observations: `Total a pagar: ${formatCurrency(totalValue * 1.145)}`
+                    amount: ((totalValue * 1.145) / 8).toFixed(2)
                 },
                 {
                     name: '9x no cartão de crédito',
-                    amount: ((totalValue * 1.1573) / 9).toFixed(2),
-                    observations: `Total a pagar: ${formatCurrency(totalValue * 1.1573)}`
+                    amount: ((totalValue * 1.1573) / 9).toFixed(2)
                 },
                 {
                     name: '10x no cartão de crédito',
-                    amount: ((totalValue * 1.17) / 10).toFixed(2),
-                    observations: `Total a pagar: ${formatCurrency(totalValue * 1.17)}`
+                    amount: ((totalValue * 1.17) / 10).toFixed(2)
                 },
                 {
                     name: '11x no cartão de crédito',
-                    amount: ((totalValue * 1.18) / 11).toFixed(2),
-                    observations: `Total a pagar: ${formatCurrency(totalValue * 1.18)}`
+                    amount: ((totalValue * 1.18) / 11).toFixed(2)
                 },
                 {
                     name: '12x no cartão de crédito',
-                    amount: ((totalValue * 1.2237) / 12).toFixed(2),
-                    observations: `Total a pagar: ${formatCurrency(totalValue * 1.2237)}`
+                    amount: ((totalValue * 1.2237) / 12).toFixed(2)
                 }
             ];
 
@@ -177,10 +189,6 @@
                 let amountCell = document.createElement('td');
                 amountCell.innerText = formatCurrency(Number(option.amount));
                 row.appendChild(amountCell);
-
-                let obsCell = document.createElement('td');
-                obsCell.innerText = option.observations;
-                row.appendChild(obsCell);
 
                 table.appendChild(row);
             });
